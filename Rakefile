@@ -1,8 +1,8 @@
-require 'rspec/core/rake_task'
-
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = 'spec/*_spec.rb'
-  t.rspec_opts = '-r ./spec/spec_helper.rb'
+#!/usr/bin/env rake
+task :app do
+  require './app'
 end
 
-task :default => :spec
+Dir[File.dirname(__FILE__) + '/lib/tasks/*.rb'].sort.each do |path|
+  require path
+end

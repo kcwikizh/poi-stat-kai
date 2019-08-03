@@ -16,6 +16,7 @@ GEM
     mini_portile2 (2.4.0)
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
+    pg (1.1.4)
     public_suffix (3.0.3)
     puma (3.12.1)
     rack (2.0.7)
@@ -38,6 +39,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
+    sequel (5.23.0)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -51,11 +53,13 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  pg
   puma
   rake
   roda
   rspec
+  sequel
   slim
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
