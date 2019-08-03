@@ -9,6 +9,7 @@ DB = Sequel.connect(
   user: ENV['PGUSER'],
   password: ENV['PGPASSWORD']
 )
+DB.extension :pg_array
 
 class App < Roda
   plugin :multi_route
