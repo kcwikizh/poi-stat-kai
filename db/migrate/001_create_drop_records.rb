@@ -40,10 +40,13 @@ Sequel.migration do
           create_table("drop_m#{map_id}c#{cell_id}l0r#{rank}".to_sym) do
             primary_key :id, unique: true
             column :ship, 'int2'
+            column :item, 'int2', null: true
             DateTime :time
             Integer :enemy
             column :hqLv, 'int2'
-            Integer :origin
+            Integer :origin, null: true
+            column :ownCounts, 'int2[]', null: true
+            Integer :hqID, null: true
 
             index :ship
             index :time
@@ -61,13 +64,30 @@ Sequel.migration do
       column :fleet1, 'int2[]'
       column :fleet2, 'int2[]', null: true
       column :formation, 'int2'
+      String :desc, size: 256
 
-      index [:map, :cell]
+      index :desc, index_type: 'hash'
     end
 
     create_table(:report_agent) do
       primary_key :id, unique: true
-      String :name
+      String :name, size: 50
+
+      index :name, index_type: 'gin'
+    end
+
+    create_table(:hq_hash) do
+      primary_key :id, unique: true
+      String :hash, size: 30
+
+      index :hash, index_type: 'hash'
+    end
+
+    create_table(:kv_data) do
+      column :key, 'text', primary_key: true
+      column :value, 'text'
+
+      index :key, index_type: 'hash'
     end
   end
 end
