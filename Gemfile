@@ -6,6 +6,7 @@ gem 'puma'
 gem 'roda'
 gem 'sequel'
 gem 'sequel_pg'
+gem 'mongoid'
 gem 'slim'
 
 group :test do

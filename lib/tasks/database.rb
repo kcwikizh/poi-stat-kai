@@ -1,14 +1,14 @@
 namespace :db do
   namespace :migrate do
     desc 'Perform migration up to lastest migration available'
-    task :up => :app do
+    task :up => :db do
       Sequel.extension :migration
       Sequel::Migrator.run(Sequel::Model.db, 'db/migrate')
       puts "<= db:migrate:up executed"
     end
 
     desc "Perform migration down (erase all data)"
-    task :down => :app do
+    task :down => :db do
       Sequel.extension :migration
       Sequel::Migrator.run(Sequel::Model.db, 'db/migrate', target: 0)
       puts "<= db:migrate:down executed"
@@ -26,7 +26,7 @@ namespace :db do
   end
 
   desc 'Drop the database'
-  task :drop => :app do
+  task :drop => :db do
     Sequel::Model.db.disconnect
     config = Sequel::Model.db.opts
     puts "=> Dropping database '#{config[:database]}'"

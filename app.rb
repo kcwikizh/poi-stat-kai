@@ -1,20 +1,13 @@
 require 'roda'
-require 'sequel'
 require 'slim'
-
-DB = Sequel.connect(
-  adapter: 'postgres',
-  database: 'poistatkai',
-  host: ENV['PGHOST'],
-  user: ENV['PGUSER'],
-  password: ENV['PGPASSWORD']
-)
-DB.extension :pg_array
+require_relative 'db'
 
 class App < Roda
   plugin :multi_route
   plugin :render, engine: 'slim'
 
+  Dir['./models/*.rb'].each{|file| require file}
+  Dir['./helpers/*.rb'].each{|file| require file}
   Dir['./routes/*.rb'].each{|file| require file}
 
   route do |r|
