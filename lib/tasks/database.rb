@@ -13,6 +13,13 @@ namespace :db do
       Sequel::Migrator.run(Sequel::Model.db, 'db/migrate', target: 0)
       puts "<= db:migrate:down executed"
     end
+
+    desc 'Migrate test for CI'
+    task :test => :db do
+      Sequel.extension :migration
+      Sequel::Migrator.run(Sequel::Model.db, 'db/migrate_test')
+      puts "<= db:migrate:test executed"
+    end
   end
 
   desc 'Perform migration up to lastest migration available'
