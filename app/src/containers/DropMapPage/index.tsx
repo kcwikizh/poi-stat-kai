@@ -3,7 +3,7 @@ import {
   Button
 } from 'semantic-ui-react'
 
-export default class DropPage extends React.Component<{}, {}> {
+export default class DropMapPage extends React.Component<{}, {}> {
   public render(): JSX.Element {
     return (
       <>
