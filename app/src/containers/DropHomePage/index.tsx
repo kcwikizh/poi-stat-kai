@@ -37,7 +37,7 @@ const DropMapPane = styled(Tab.Pane)`
   }
 `;
 
-const panes = Constant.MapInfo.map(data => ({
+const panes = Constant.MapAreaInfo.map(data => ({
   menuItem: data.name,
   render: () => (
     <DropMapPane>

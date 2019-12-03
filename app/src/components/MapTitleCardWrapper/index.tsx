@@ -11,7 +11,7 @@ const genRows = (items: number[][]) => items.map((item, idx) =>
 
 export default function MapTitleCardWrapper(props) {
   // Convert [1,2,3,4,5] to [[1,2],[3,4],5] for non-event map
-  const data = Constant.MapInfo.get(props.map).maps.reduce((prev: number[][], cur, curIdx) => {
+  const data = Constant.MapAreaInfo.get(props.map).maps.reduce((prev: number[][], cur, curIdx) => {
     if (props.map > 100 || curIdx > 4) {
       prev.push([cur]);
     } else {

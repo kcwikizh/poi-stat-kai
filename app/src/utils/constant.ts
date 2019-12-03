@@ -1,3 +1,4 @@
+import MapAreaInfo = require('@app/data/maparea.json');
 import MapInfo = require('@app/data/map.json');
 
 type ArrayWithId<T> = T[] & { get(id: number): T };
@@ -9,5 +10,6 @@ function wrapper<T extends { id: number }>(data: T[]): ArrayWithId<T> {
 }
 
 export default {
+  MapAreaInfo: wrapper(MapAreaInfo),
   MapInfo: wrapper(MapInfo),
 };
