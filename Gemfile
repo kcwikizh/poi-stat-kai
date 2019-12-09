@@ -5,9 +5,12 @@ gem 'pg'
 gem 'puma'
 gem 'roda'
 gem 'sequel'
-gem 'sequel_pg'
 gem 'mongoid'
 gem 'slim'
+
+platform :ruby do
+  gem 'sequel_pg'
+end
 
 group :test do
   gem 'capybara'
