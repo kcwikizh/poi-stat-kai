@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Container, Divider } from 'semantic-ui-react';
 import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom';

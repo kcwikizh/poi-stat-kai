@@ -2,7 +2,18 @@ module.exports = {
   "translation": {
     "APP_Name": "poi数据统计",
 
+    // common
+    "ShipGirl": "舰娘",
+    "ShipType": "舰种",
+    "Amount": "数量",
+    "S_Rate": "S胜",
+    "A_Rate": "A胜",
+    "B_Rate": "B胜",
+    "HQ_LV": "提督等级",
+    "DropRate": "掉落率",
+
     // menu
+    "Home": "主页",
     "Lab": "实验室",
     "Drop": "掉落",
 
@@ -29,5 +40,7 @@ module.exports = {
     // drop
     "DropHome_Header": "掉落统计",
     "DropHome_Map": "海域",
+
+
   },
 };
