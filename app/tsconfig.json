@@ -1,16 +1,19 @@
 {
+  "include": ["src"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "es5",
     "lib": ["es6", "dom"],
     "module": "commonjs",
     "jsx": "react",
-    "rootDir": "src",
+    "rootDir": "..",
     "outDir": "dist",
     "baseUrl": ".",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "paths": {
-      "@app/*": ["./src/*"]
+      "src/*": ["./src/*"],
+      "data/*": ["../data/*"]
     }
   }
 }

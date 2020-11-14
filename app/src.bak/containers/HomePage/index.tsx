@@ -4,7 +4,7 @@ import {
   Divider,
   Grid,
   Header,
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 import { useTranslation, Trans } from 'react-i18next';
 
 export default function HomePage() {

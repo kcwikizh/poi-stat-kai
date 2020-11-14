@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getImageUrl } from '@app/utils/kcwiki_helper';
+import { getImageUrl } from 'src/utils/kcwiki_helper';
 
 export default function MapTitleCard(props) {
   return (

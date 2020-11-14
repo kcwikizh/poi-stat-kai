@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: ['./src/app.tsx'],
+    app: ['./src/index.tsx'],
     vendor: ['react', 'react-dom'],
   },
   output: {
@@ -14,7 +14,8 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     alias: {
-      "@app": path.resolve(__dirname, 'src'),
+      "src": path.resolve(__dirname, 'src'),
+      "data": path.resolve(__dirname, '..', 'data'),
     },
   },
   module: {
@@ -35,7 +36,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: './src/index.html',
+      template: './public/index.html',
     }),
   ],
 }

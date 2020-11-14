@@ -9,9 +9,9 @@ import {
 } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
-import Constant from '@app/utils/constant';
+import Constant from 'src/utils/constant';
 
-import MapTitleCardWrapper from '@app/components/MapTitleCardWrapper';
+import MapTitleCardWrapper from 'src/components/MapTitleCardWrapper';
 
 const WrappableTab = styled(Tab)`
   .menu {

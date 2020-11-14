@@ -1,5 +1,5 @@
-import MapAreaInfo = require('@app/data/maparea.json');
-import MapInfo = require('@app/data/map.json');
+import * as MapAreaInfo from 'data/maparea.json';
+import * as MapInfo from 'data/map.json';
 
 type ArrayWithId<T> = T[] & { get(id: number): T };
 

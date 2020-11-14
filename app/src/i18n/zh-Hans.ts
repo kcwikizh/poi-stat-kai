@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   "translation": {
     "APP_Name": "poi数据统计",
 
@@ -6,9 +6,9 @@ module.exports = {
     "ShipGirl": "舰娘",
     "ShipType": "舰种",
     "Amount": "数量",
-    "S_Rate": "S胜",
-    "A_Rate": "A胜",
-    "B_Rate": "B胜",
+    "S_Rank": "S胜",
+    "A_Rank": "A胜",
+    "B_Rank": "B胜",
     "HQ_LV": "提督等级",
     "DropRate": "掉落率",
 

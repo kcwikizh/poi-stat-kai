@@ -1,8 +1,8 @@
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
-import Constant from '@app/utils/constant';
+import Constant from 'src/utils/constant';
 
-import MapTitleCard from '@app/components/MapTitleCard';
+import MapTitleCard from 'src/components/MapTitleCard';
 
 const genColumns = (items: number[]) => items.map(id =>
   <Grid.Column key={id}><MapTitleCard map={id / 10 | 0} cell={id % 10} /></Grid.Column>);

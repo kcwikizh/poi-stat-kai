@@ -3,7 +3,7 @@ import {
   Container,
   Dropdown,
   Menu,
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router-dom';

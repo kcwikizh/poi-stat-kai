@@ -1,4 +1,4 @@
-import md5 = require('md5');
+import * as md5 from 'md5';
 
 export function getImageUrl(filename: string) {
   const hash = md5(filename);

@@ -1,8 +1,9 @@
 import i18n from 'i18next';
-import { initReactI18next } from "react-i18next";
+import { initReactI18next } from 'react-i18next';
+import zh_Hans from './i18n/zh-Hans';
 
 const resources = {
-  "zh-Hans": require('./i18n/zh-Hans'),
+  "zh-Hans": zh_Hans,
 };
 
 i18n
