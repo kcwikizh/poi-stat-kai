@@ -32,25 +32,25 @@ Sequel.migration do
       "64": [*1..21],
       "65": [*1..18],
       "71": [*1..15],
-      "72": [*1..16]
+      "72": [*1..16],
     }
     map.each do |map_id, cells|
       cells.each do |cell_id|
-        (1..6).each do |rank|
-          create_table("drop_m#{map_id}c#{cell_id}l0r#{rank}".to_sym) do
+        ["S", "A", "B", "C", "D", "E"].each do |rank|
+          create_table("drop_map#{map_id}_cell#{cell_id}_lv0_rank#{rank}".to_sym) do
             primary_key :id, unique: true
-            column :ship, 'int2'
-            column :item, 'int2', null: true
+            column :ship, "smallint"
+            column :item, "smallint", null: true
             DateTime :time
             Integer :enemy
-            column :hqLv, 'int2'
+            column :hqLv, "smallint"
             Integer :origin, null: true
-            column :ownCounts, 'int2[]', null: true
+            column :ownCounts, "smallint[]", null: true
             Integer :hqID, null: true
 
-            index :ship
+            index :ship, index_type: "hash"
             index :time
-            index :enemy
+            index :enemy, index_type: "hash"
             index :hqLv
           end
         end
@@ -59,35 +59,37 @@ Sequel.migration do
 
     create_table(:drop_enemy) do
       primary_key :id, unique: true
-      column :map, 'int2'
-      column :cell, 'int2'
-      column :fleet1, 'int2[]'
-      column :fleet2, 'int2[]', null: true
-      column :formation, 'int2'
-      String :desc, size: 256
+      column :map, "smallint"
+      column :cell, "smallint"
+      column :fleet1, "smallint[]"
+      column :fleet2, "smallint[]", null: true
+      column :formation, "smallint"
+      String :desc, size: 64
 
-      index :desc, index_type: 'hash'
+      index :desc, index_type: "hash"
     end
 
     create_table(:report_agent) do
       primary_key :id, unique: true
-      String :name, size: 50
+      String :name, size: 64
 
-      index :name, index_type: 'gin'
+      index :name, index_type: "hash"
     end
 
     create_table(:hq_hash) do
       primary_key :id, unique: true
-      String :hash, size: 30
+      String :hash, size: 32
 
-      index :hash, index_type: 'hash'
+      index :hash, index_type: "hash"
     end
 
-    create_table(:kv_data) do
-      column :key, 'text', primary_key: true
-      column :value, 'text'
+    create_table(:kv_cache) do
+      String :desc, size: 128, primary_key: true
+      column :value, "text"
+      DateTime :expire_time, null: true
 
-      index :key, index_type: 'hash'
+      index :key, index_type: "hash"
+      index :expire_time
     end
   end
 end
