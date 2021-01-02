@@ -1,11 +1,11 @@
-require 'sequel'
+require "sequel"
 
 DB = Sequel.connect(
-  adapter: 'postgres',
-  database: 'poistatkai',
-  host: ENV['PGHOST'],
-  user: ENV['PGUSER'],
-  password: ENV['PGPASSWORD']
+  adapter: "postgres",
+  database: "poistatkai",
+  host: ENV["PGHOST"] || "localhost",
+  user: ENV["PGUSER"] || "postgres",
+  password: ENV["PGPASSWORD"] || "",
 )
 DB.extension :pg_array
 
