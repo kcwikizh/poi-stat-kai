@@ -3,7 +3,7 @@ module KVCacheHelper
     def get_kv(key, default = :not_exist)
       kv = KVCache[key]
       if !kv.nil? and kv.exists?
-        if kv[:expire_time] and kv[:expire_time] < DateTime.now
+        if kv[:expire_time] and kv[:expire_time] < Time.now
           kv.destroy
           :expired
         else
