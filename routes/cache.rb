@@ -3,5 +3,9 @@ require 'json'
 
 get '/api/cache/:key' do
   content_type :json
-  return get_kv_data(parsms[:key])
+  data = get_kv_data(params[:key])
+  if data.nil?
+    halt 404
+  end
+  data
 end

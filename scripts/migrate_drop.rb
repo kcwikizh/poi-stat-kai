@@ -1,6 +1,6 @@
 require_relative "../app"
 
-current_id = "55b574080000000000000000"
+current_id = Sinatra::KVDataHelper.get_kv_data("migrate_drop") || "55b574080000000000000000"
 
 DropShipRecord.where(
   :id.gt => BSON::ObjectId.from_string(current_id),
@@ -8,7 +8,15 @@ DropShipRecord.where(
   puts item[:id]
   current_id = item[:id].to_s
 
-  if item[:mapId] > 80
+  unless [:mapId, :cellId, :enemyShips1, :enemyFormation, :enemy, :origin, :teitokuLv, :mapLv].all? { |k| !item[k].nil? }
+    next
+  end
+  if item[:enemyShips1].empty?
+    next
+  end
+
+  table = Sinatra::DropModelHelper.get_model(item[:mapId], item[:cellId], item[:rank], item[:mapLv])
+  if table.nil?
     next
   end
 
@@ -51,10 +59,9 @@ DropShipRecord.where(
     agent: item[:origin],
   )
 
-  table = Sinatra::DropModelHelper.get_model(item[:mapId], item[:cellId], item[:rank], item[:mapLv])
   table.create(
     ship: item[:shipId] == 0 ? -1 : item[:shipId],
-    item: item[:itemId] == 0 ? -1 : item[:itemId],
+    item: (item[:itemId] == 0 || item[:itemId] == -1) ? nil : item[:itemId],
     enemy: enemy_record.id,
     reporter: report_record.id,
     hq_lv: item[:teitokuLv],
