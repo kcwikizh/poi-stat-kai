@@ -3,7 +3,7 @@ require "json"
 require "set"
 require_relative "../app"
 
-staticify_time_range = (DateTime.now - 30..DateTime.now)
+staticify_time_range = (Time.new(2021, 10, 29, 19, 0, 0)..DateTime.now)
 staticify_mapareas = [*1..7, 52]
 drop_items = [68]
 
