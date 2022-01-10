@@ -1,0 +1,17 @@
+[Unit]
+Description=poi-stat-kai server
+Wants=network-online.target
+After=network-online.target
+
+StartLimitIntervalSec=500
+StartLimitBurst=10
+
+[Service]
+Restart=on-failure
+RestartSec=2
+
+WorkingDirectory=/opt/poi-stat-kai
+ExecStart=/usr/local/bin/puma
+
+[Install]
+WantedBy=multi-user.target

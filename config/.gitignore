@@ -1,3 +1,2 @@
 database.yml
 mongoid.yml
-puma.rb
