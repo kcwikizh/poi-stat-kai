@@ -9,7 +9,7 @@ get '/api/cache/:key' do
 
   begin
     d = JSON.parse(data)
-    if d["generateTime"]
+    if d.is_a?(Hash) && d["generateTime"].is_a?(String)
       last_modified (Time.parse(d["generateTime"]) - 8.0 / 24)
     end
   rescue JSON::ParserError
