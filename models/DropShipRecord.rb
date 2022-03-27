@@ -19,4 +19,5 @@ class DropShipRecord
   field :teitokuId,      type: String
   field :shipCounts,     type: Array
   field :origin,         type: String
+  field :ownedShipSnapshot, type: Hash
 end

@@ -67,6 +67,7 @@ DropShipRecord.where(
     hq_lv: item[:teitokuLv],
     own_count: (item[:shipCounts].nil? || item[:shipCounts].empty?) ? nil : item[:shipCounts],
     time: item[:id].to_time,
+    owned_ship: (item[:ownedShipSnapshot].nil? || item[:ownedShipSnapshot].empty?) ? nil : item[:ownedShipSnapshot],
   )
 end
 

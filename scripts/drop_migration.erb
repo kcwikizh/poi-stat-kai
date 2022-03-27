@@ -34,13 +34,19 @@
     # "72": [*1..16],
     # "73": [*1..25],
     # "521": [*1..22],
-    "522": [*1..25],
-    "523": [*1..49],
+    # "522": [*1..25],
+    # "523": [*1..49],
+    # "74": [*1..23],
+    # "531": [*1..45],
+    # "532": [*1..38],
+    # "533": [*1..38],
+    # "534": [*1..59],
+    "535": [*1..53],
   } %>
 # THIS FILE IS AUTO-GENERATED
-class CreateDropRecordMap522 < ActiveRecord::Migration[6.1]
+class CreateDropRecordMap535 < ActiveRecord::Migration[6.1]
   def up
-<% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in ["4", "3", "2", "1"] %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
+<% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in (map[0].to_s.to_i > 100 ? ["4", "3", "2", "1"] : ["0"]) %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
     create_table :drop_record_<%= @suffix %> do |t|
       t.integer :ship,      null: false, limit: 2
       t.integer :item,      null: true, limit: 2
@@ -49,6 +55,7 @@ class CreateDropRecordMap522 < ActiveRecord::Migration[6.1]
       t.integer :hq_lv,     null: false, limit: 2
       t.integer :own_count, null: true, array: true, limit: 2
       t.column  :time, :datetime
+      t.column  :owned_ship, :jsonb, null: true
     end
     add_index :drop_record_<%= @suffix %>, :ship
     add_index :drop_record_<%= @suffix %>, :time
@@ -56,7 +63,7 @@ class CreateDropRecordMap522 < ActiveRecord::Migration[6.1]
   end
 
   def down
-<% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in ["4", "3", "2", "1"] %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
+<% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in (map[0].to_s.to_i > 100 ? ["4", "3", "2", "1"] : ["0"]) %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
     drop_table :drop_record_<%= @suffix %>
 <% end %><% end %><% end %><% end %>
   end

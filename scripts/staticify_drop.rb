@@ -4,7 +4,7 @@ require "set"
 require_relative "../app"
 
 staticify_time_range = (DateTime.now - 30..DateTime.now)
-staticify_mapareas = [*1..7, 52]
+staticify_mapareas = [*1..7, 53]
 
 # map
 staticify_mapareas.each do |maparea|
