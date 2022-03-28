@@ -1,0 +1,20 @@
+default:
+  clients:
+    default:
+      database: poi-production
+      hosts:
+        - localhost:27017
+
+development:
+  clients:
+    default:
+      database: poi-production
+      hosts:
+        - localhost:27017
+
+production:
+  clients:
+    default:
+      database: poi-production
+      hosts:
+        - localhost:27017
