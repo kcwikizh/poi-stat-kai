@@ -4,7 +4,7 @@ require "set"
 require_relative "../app"
 
 staticify_time_range = (DateTime.now - 30..DateTime.now)
-staticify_mapareas = [*1..7, 53]
+staticify_mapareas = [*1..7, 55]
 
 # map
 staticify_mapareas.each do |maparea|
@@ -14,13 +14,13 @@ staticify_mapareas.each do |maparea|
       levels.each do |level|
         query_result = {}
 
-        ['s', 'a', 'b'].each do |rank|
+        ["s", "a", "b"].each do |rank|
           json_obj = {
             totalCount: 0,
             generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
             timeRange: [
               staticify_time_range.begin.strftime("%Y-%m-%d %H:%M:%S"),
-              staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S")
+              staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S"),
             ],
             data: {},
           }
@@ -35,6 +35,7 @@ staticify_mapareas.each do |maparea|
             table.select(:ship).distinct.map(&:ship).each do |ship|
               data_obj = {
                 enemy: {},
+                own: {},
                 hqLv: [200, 0],
                 rate: 0,
                 totalCount: 0,
@@ -42,7 +43,7 @@ staticify_mapareas.each do |maparea|
               query = table.where(ship: ship)
               query.select(:enemy).distinct.map(&:enemy).map do |enemy_id|
                 enemy = DropEnemy.where(id: enemy_id).first
-                e_name = enemy.fleet1.concat(enemy.fleet2 || []).select {|x| x > 0}.map {|x| "#{ConstData.ship[x]["name"]}(#{x})" }.join("/")
+                e_name = enemy.fleet1.concat(enemy.fleet2 || []).select { |x| x > 0 }.map { |x| "#{ConstData.ship[x]["name"]}(#{x})" }.join("/")
                 e_name += "/#{enemy.formation}"
 
                 enemy_total_count[e_name] ||= 0
@@ -55,6 +56,20 @@ staticify_mapareas.each do |maparea|
                 data_obj[:enemy][e_name][:count] += query.where(enemy: enemy_id).count
                 data_obj[:enemy][e_name][:rate] = (data_obj[:enemy][e_name][:count] * 100.0 / enemy_total_count[e_name]).round(3)
               end
+              data_obj[:own] = {}
+              (0...5).each do |c|
+                data_obj[:own][c] ||= {
+                  count: 0,
+                  total: 0,
+                }
+                if c == 0
+                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{ship}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = 0").count
+                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{ship}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = 0").count
+                else
+                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{ship}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = #{c}").count
+                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{ship}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = #{c}").count
+                end
+              end
               data_obj[:hqLv] = [query.minimum(:hq_lv), query.maximum(:hq_lv)]
               data_obj[:totalCount] = query.count
               data_obj[:rate] = (data_obj[:totalCount] * 100.0 / json_obj[:totalCount]).round(3)
@@ -62,6 +77,7 @@ staticify_mapareas.each do |maparea|
               if data_obj[:totalCount] > 0
                 json_obj[:data][ConstData.ship[ship]["name"]] ||= {
                   enemy: {},
+                  own: {},
                   hqLv: [200, 0],
                   rate: 0,
                   totalCount: 0,
@@ -73,6 +89,14 @@ staticify_mapareas.each do |maparea|
                   }
                   json_obj[:data][ConstData.ship[ship]["name"]][:enemy][k][:count] += data_obj[:enemy][k][:count]
                   json_obj[:data][ConstData.ship[ship]["name"]][:enemy][k][:rate] = (json_obj[:data][ConstData.ship[ship]["name"]][:enemy][k][:count] * 100.0 / enemy_total_count[k]).round(3)
+                end
+                data_obj[:own].each do |k, v|
+                  json_obj[:data][ConstData.ship[ship]["name"]][:own][k] ||= {
+                    count: 0,
+                    total: 0,
+                  }
+                  json_obj[:data][ConstData.ship[ship]["name"]][:own][k][:count] += data_obj[:own][k][:count]
+                  json_obj[:data][ConstData.ship[ship]["name"]][:own][k][:total] += data_obj[:own][k][:total]
                 end
                 if json_obj[:data][ConstData.ship[ship]["name"]][:hqLv][0] > data_obj[:hqLv][0]
                   json_obj[:data][ConstData.ship[ship]["name"]][:hqLv][0] = data_obj[:hqLv][0]
@@ -98,7 +122,7 @@ staticify_mapareas.each do |maparea|
           generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
           timeRange: [
             staticify_time_range.begin.strftime("%Y-%m-%d %H:%M:%S"),
-            staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S")
+            staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S"),
           ],
           data: {},
         }
@@ -112,6 +136,7 @@ staticify_mapareas.each do |maparea|
             hqLv: value[:hqLv],
             rate: (value[:totalCount] * 100.0 / json_obj[:totalCount]).round(3),
             enemy: {},
+            own: {},
           }
           value[:enemy].each do |k, v|
             json_obj[:data][ship][:enemy][k] = {
@@ -119,8 +144,14 @@ staticify_mapareas.each do |maparea|
               rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3),
             }
           end
+          value[:own].each do |k, v|
+            json_obj[:data][ship][:own][k] = {
+              count: v[:count],
+              total: v[:total],
+            }
+          end
         end
-  
+
         query_result[:A][:data].each do |ship, value|
           data_obj = json_obj[:data][ship] || {
             rankCount: [0, 0],
@@ -128,11 +159,12 @@ staticify_mapareas.each do |maparea|
             hqLv: value[:hqLv],
             rate: 0,
             enemy: {},
+            own: {},
           }
           data_obj[:rankCount][1] = value[:totalCount]
           data_obj[:totalCount] += value[:totalCount]
           data_obj[:rate] = (data_obj[:totalCount] * 100.0 / json_obj[:totalCount]).round(3)
-  
+
           if value[:hqLv][0] < data_obj[:hqLv][0]
             data_obj[:hqLv][0] = value[:hqLv][0]
           end
@@ -147,21 +179,30 @@ staticify_mapareas.each do |maparea|
             data_obj[:enemy][k][:count][1] = v[:count]
             data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
           end
-  
+          value[:own].each do |k, v|
+            data_obj[:own][k] ||= {
+              count: 0,
+              total: 0,
+            }
+            data_obj[:own][k][:count] += v[:count]
+            data_obj[:own][k][:total] += v[:total]
+          end
+
           json_obj[:data][ship] = data_obj
         end
 
         Sinatra::KVDataHelper.set_kv_data("drop_map_#{map}_#{map_cell}#{level > 0 ? "-#{level}" : ""}-SA", json_obj.to_json)
-  
+
         # rank S/A/B
         json_obj = {
           totalCount: query_result[:S][:totalCount] + query_result[:A][:totalCount] + query_result[:B][:totalCount],
           generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
           timeRange: [
             staticify_time_range.begin.strftime("%Y-%m-%d %H:%M:%S"),
-            staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S")
+            staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S"),
           ],
           data: {},
+          own: {},
         }
 
         enemy_total_count = query_result[:S][:enemyCount].merge(query_result[:A][:enemyCount]) { |k, v1, v2| v1 + v2 }
@@ -174,11 +215,18 @@ staticify_mapareas.each do |maparea|
             hqLv: value[:hqLv],
             rate: (value[:totalCount] * 100.0 / json_obj[:totalCount]).round(3),
             enemy: {},
+            own: {},
           }
           value[:enemy].each do |k, v|
             json_obj[:data][ship][:enemy][k] = {
               count: [v[:count], 0, 0],
               rate: (v[:count] * 100.0 / enemy_total_count[k]).round(3),
+            }
+          end
+          value[:own].each do |k, v|
+            json_obj[:data][ship][:own][k] = {
+              count: v[:count],
+              total: v[:total],
             }
           end
         end
@@ -190,6 +238,7 @@ staticify_mapareas.each do |maparea|
             hqLv: value[:hqLv],
             rate: 0,
             enemy: {},
+            own: {},
           }
           data_obj[:rankCount][1] = value[:totalCount]
           data_obj[:totalCount] += value[:totalCount]
@@ -209,6 +258,14 @@ staticify_mapareas.each do |maparea|
             data_obj[:enemy][k][:count][1] = v[:count]
             data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
           end
+          value[:own].each do |k, v|
+            data_obj[:own][k] ||= {
+              count: 0,
+              total: 0,
+            }
+            data_obj[:own][k][:count] += v[:count]
+            data_obj[:own][k][:total] += v[:total]
+          end
 
           json_obj[:data][ship] = data_obj
         end
@@ -220,6 +277,7 @@ staticify_mapareas.each do |maparea|
             hqLv: value[:hqLv],
             rate: 0,
             enemy: {},
+            own: {},
           }
           data_obj[:rankCount][2] = value[:totalCount]
           data_obj[:totalCount] += value[:totalCount]
@@ -238,6 +296,14 @@ staticify_mapareas.each do |maparea|
             }
             data_obj[:enemy][k][:count][2] = v[:count]
             data_obj[:enemy][k][:rate] = (data_obj[:enemy][k][:count].reduce(&:+) * 100.0 / enemy_total_count[k]).round(3)
+          end
+          value[:own].each do |k, v|
+            data_obj[:own][k] ||= {
+              count: 0,
+              total: 0,
+            }
+            data_obj[:own][k][:count] += v[:count]
+            data_obj[:own][k][:total] += v[:total]
           end
 
           json_obj[:data][ship] = data_obj
@@ -278,7 +344,7 @@ end
       generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
       timeRange: [
         staticify_time_range.begin.strftime("%Y-%m-%d %H:%M:%S"),
-        staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S")
+        staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S"),
       ],
       data: {},
     }

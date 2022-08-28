@@ -41,10 +41,18 @@
     # "532": [*1..38],
     # "533": [*1..38],
     # "534": [*1..59],
-    "535": [*1..53],
+    # "535": [*1..53],
+    # "541": [*1..24],
+    # "542": [*1..40],
+    # "543": [*1..43],
+    # "544": [*1..43],
+    # "545": [*1..86],
+    "551": [*1..26],
+    "552": [*1..32],
+    "553": [*1..42],
   } %>
 # THIS FILE IS AUTO-GENERATED
-class CreateDropRecordMap535 < ActiveRecord::Migration[6.1]
+class CreateDropRecordMap551 < ActiveRecord::Migration[6.1]
   def up
 <% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in (map[0].to_s.to_i > 100 ? ["4", "3", "2", "1"] : ["0"]) %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
     create_table :drop_record_<%= @suffix %> do |t|
