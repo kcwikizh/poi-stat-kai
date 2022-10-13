@@ -6,6 +6,19 @@ require_relative "../app"
 staticify_time_range = (DateTime.now - 30..DateTime.now)
 staticify_mapareas = [*1..7, 55]
 
+def get_own_map_id(id)
+  ids = []
+  until ConstData.ship[id].nil? || id <= 0 || ids.include?(id)
+    ids.push(id)
+    if ConstData.ship[id]["after_ship_id"]
+      id = ConstData.ship[id]["after_ship_id"]
+    else
+      id = -1
+    end
+  end
+  return ids.min
+end
+
 # map
 staticify_mapareas.each do |maparea|
   ConstData.maparea[maparea]["maps"].each do |map|
@@ -63,11 +76,11 @@ staticify_mapareas.each do |maparea|
                   total: 0,
                 }
                 if c == 0
-                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{ship}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = 0").count
-                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{ship}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = 0").count
+                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{get_own_map_id(ship)}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{get_own_map_id(ship)}') = 0").count
+                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{get_own_map_id(ship)}') is null or JSONB_ARRAY_LENGTH(owned_ship->'#{get_own_map_id(ship)}') = 0").count
                 else
-                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{ship}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = #{c}").count
-                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{ship}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{ship}') = #{c}").count
+                  data_obj[:own][c][:count] = query.where("(owned_ship->'#{get_own_map_id(ship)}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{get_own_map_id(ship)}') = #{c}").count
+                  data_obj[:own][c][:total] = table.where("(owned_ship->'#{get_own_map_id(ship)}') is not null and JSONB_ARRAY_LENGTH(owned_ship->'#{get_own_map_id(ship)}') = #{c}").count
                 end
               end
               data_obj[:hqLv] = [query.minimum(:hq_lv), query.maximum(:hq_lv)]
