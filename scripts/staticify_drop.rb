@@ -4,7 +4,7 @@ require "set"
 require_relative "../app"
 
 staticify_time_range = (DateTime.now - 30..DateTime.now)
-staticify_mapareas = [*1..7, 55]
+staticify_mapareas = [*1..7]
 
 def get_own_map_id(id)
   ids = []

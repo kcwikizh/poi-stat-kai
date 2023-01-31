@@ -3,8 +3,8 @@ require "json"
 require "set"
 require_relative "../app"
 
-staticify_time_range = (Time.new(2021, 10, 29, 19, 0, 0)..DateTime.now)
-staticify_mapareas = [*1..7, 52]
+staticify_time_range = (Time.new(2022, 11, 9, 19, 0, 0)..DateTime.now)
+staticify_mapareas = [*1..7]
 drop_items = [68]
 
 drop_items.each do |item_id|
@@ -13,7 +13,7 @@ drop_items.each do |item_id|
     generateTime: Time.now.strftime("%Y-%m-%d %H:%M:%S"),
     timeRange: [
       staticify_time_range.begin.strftime("%Y-%m-%d %H:%M:%S"),
-      staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S")
+      staticify_time_range.end.strftime("%Y-%m-%d %H:%M:%S"),
     ],
     data: {},
   }
@@ -29,7 +29,7 @@ drop_items.each do |item_id|
             a_count: 0,
             a_total: 0,
           }
-          ['s', 'a'].each do |rank|
+          ["s", "a"].each do |rank|
             cells = ConstData.map[map_id]["routes"].select { |k, v| v["to"] == cell_sym }
             cells.each_key.map(&:to_i).each do |cell_id|
               table = Sinatra::DropModelHelper.get_model(map_id, cell_id, rank, level).where(time: staticify_time_range)

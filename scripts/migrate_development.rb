@@ -14,9 +14,6 @@ CreateItemRecord.where(
   if item[:items].length != 4
     next
   end
-  if item[:itemId] <= 0
-    next
-  end
 
   recipe_record = DevelopmentRecipe.where([
     "fuel = ? AND ammo = ? AND steel = ? AND bauxite = ?",
@@ -40,7 +37,7 @@ CreateItemRecord.where(
   )
 
   DevelopmentRecord.create(
-    item: item[:itemId],
+    item: item[:itemId] == 0 ? -1 : item[:itemId],
     recipe: recipe_record.id,
     reporter: report_record.id,
     secretary: item[:secretary],
