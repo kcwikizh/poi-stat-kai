@@ -41,7 +41,10 @@ staticify_mapareas.each do |maparea|
 
           cells = ConstData.map[map]["routes"].select { |k, v| v["to"] == map_cell }
           cells.each_key.map(&:to_i).each do |cell|
-            table = Sinatra::DropModelHelper.get_model(map, cell, rank, level).where(time: staticify_time_range)
+            table = Sinatra::DropModelHelper.get_model(map, cell, rank, level)
+            if map > 100
+              table = table.where(time: staticify_time_range)
+            end
 
             json_obj[:totalCount] += table.count
 
