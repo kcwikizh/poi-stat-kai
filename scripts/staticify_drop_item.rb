@@ -3,7 +3,7 @@ require "json"
 require "set"
 require_relative "../app"
 
-staticify_time_range = (Time.new(2022, 11, 9, 19, 0, 0)..DateTime.now)
+staticify_time_range = (Time.new(2023, 11, 2, 0, 0, 0)..DateTime.now)
 staticify_mapareas = [*1..7]
 drop_items = [68]
 
@@ -49,5 +49,5 @@ drop_items.each do |item_id|
     end
   end
 
-  Sinatra::KVDataHelper.set_kv_data("drop_item_#{item_id}", json_obj.to_json)
+  Sinatra::KVDataHelper.set_kv_data("drop_item_sanma2023_#{item_id}", json_obj.to_json)
 end
