@@ -69,11 +69,16 @@
     # "577": [*1..57],
     # "581": [*1..37],
     # "582": [*1..42],
-    "583": [*1..44],
-    "584": [*1..58],
+    # "583": [*1..44],
+    # "584": [*1..58],
+    # "591": [*1..24],
+    # "592": [*1..30],
+    # "593": [*1..49],
+    "594": [*1..44],
+    "595": [*1..57],
   } %>
 # THIS FILE IS AUTO-GENERATED
-class CreateDropRecordMap583 < ActiveRecord::Migration[6.1]
+class CreateDropRecordMap594 < ActiveRecord::Migration[6.1]
   def up
 <% for map in @map %><% for cell in @map[map[0]] %><% for rank in ["s", "a", "b", "c", "d", "e"] %><% for level in (map[0].to_s.to_i > 100 ? ["4", "3", "2", "1"] : ["0"]) %><% @suffix = "#{map[0].to_s.to_i * 1000 + cell}#{rank}#{level}" %>
     create_table :drop_record_<%= @suffix %> do |t|
