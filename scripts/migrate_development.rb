@@ -45,6 +45,6 @@ CreateItemRecord.where(
     success: item[:successful],
     time: item[:id].to_time,
   )
-end
 
-Sinatra::KVDataHelper.set_kv_data("migrate_development", current_id)
+  Sinatra::KVDataHelper.set_kv_data("migrate_development", current_id)
+end

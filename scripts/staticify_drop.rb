@@ -4,7 +4,7 @@ require "set"
 require_relative "../app"
 
 staticify_time_range = (DateTime.now - 30..DateTime.now)
-staticify_mapareas = [*1..7]
+staticify_mapareas = [*1..7, 61]
 
 def get_own_map_id(id)
   ids = []
@@ -42,7 +42,7 @@ staticify_mapareas.each do |maparea|
           cells = ConstData.map[map]["routes"].select { |k, v| v["to"] == map_cell }
           cells.each_key.map(&:to_i).each do |cell|
             table = Sinatra::DropModelHelper.get_model(map, cell, rank, level)
-            if map > 100
+            if map < 100
               table = table.where(time: staticify_time_range)
             end
 

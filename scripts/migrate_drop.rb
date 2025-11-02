@@ -69,6 +69,6 @@ DropShipRecord.where(
     time: item[:id].to_time,
     owned_ship: (item[:ownedShipSnapshot].nil? || item[:ownedShipSnapshot].empty?) ? nil : item[:ownedShipSnapshot],
   )
-end
 
-Sinatra::KVDataHelper.set_kv_data("migrate_drop", current_id)
+  Sinatra::KVDataHelper.set_kv_data("migrate_drop", current_id)
+end
